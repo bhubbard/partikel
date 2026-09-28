@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Partikel (ptk) ⚛️ Sub-Atomic Micro-Agent Runtime & MCP Server</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚛️</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NFEM8TN9ZM"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-NFEM8TN9ZM');
+  </script>
+  <style>
+    :root {
+      --bg: #07090e;
+      --card-bg: #0d121d;
+      --card-border: #1a2233;
+      --accent: #f59e0b;
+      --accent-glow: rgba(245, 158, 11, 0.15);
+      --text: #e2e8f0;
+      --text-muted: #8b949e;
+      --success: #10b981;
+      --cyan: #38bdf8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; width: 100%; }
+    header.nav {
+      border-bottom: 1px solid var(--card-border);
+      padding: 1rem 1.5rem;
+      background: rgba(7, 9, 14, 0.85);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #fff;
+      text-decoration: none;
+    }
+    .brand-back {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--accent);
+      text-decoration: none;
+      margin-right: 0.5rem;
+    }
+    .hero {
+      text-align: center;
+      padding: 4rem 1rem 3rem;
+    }
+    .badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--accent);
+      background: var(--accent-glow);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      margin-bottom: 1.5rem;
+    }
+    h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      line-height: 1.2;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      max-width: 760px;
+      margin: 0 auto 2rem;
+    }
+    .cta-row {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #07090e;
+    }
+    .btn-primary:hover { background: #d97706; }
+    .btn-secondary {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+    }
+    .btn-secondary:hover { border-color: var(--text-muted); color: #fff; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin: 3rem 0;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.75rem;
+    }
+    .card h3 {
+      font-size: 1.2rem;
+      color: #fff;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+    pre {
+      background: #020408;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      margin: 1.5rem 0;
+    }
+    footer {
+      margin-top: auto;
+      border-top: 1px solid var(--card-border);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      font-size: 0.85rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-muted);
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="nav-inner">
+      <div style="display:flex; align-items:center;">
+        <a href="https://code.brandonhubbard.com" class="brand-back">&larr; code.brandonhubbard.com</a>
+        <a href="#" class="brand"><span>⚛️</span> Partikel (ptk)</a>
+      </div>
+      <a href="https://github.com/bhubbard/partikel" class="btn btn-secondary" target="_blank" rel="noopener">GitHub ★</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="badge">v0.1.0 • Micro-Agent Runtime &amp; Native Tier 0 Engine</div>
+      <h1>Sub-Atomic Micro-Agents &amp; Native Deterministic Tools</h1>
+      <p>
+        Execute pure math, AST transformations, and regex in native Rust in nanoseconds with zero token burn. Expose 35+ specialized micro-agents via Model Context Protocol (MCP).
+      </p>
+      <div class="cta-row">
+        <a href="#quickstart" class="btn btn-primary">Quickstart</a>
+        <a href="https://github.com/bhubbard/partikel" class="btn btn-secondary" target="_blank" rel="noopener">View Repository</a>
+      </div>
+    </section>
+
+    <div class="grid">
+      <div class="card">
+        <h3>⚡ Tier 0 Deterministic Engine</h3>
+        <p>Pure math (diffusion flow matching, spring physics), regex, and AST sorting run natively in &lt; 5&micro;s with 0 token inference cost.</p>
+      </div>
+      <div class="card">
+        <h3>📐 Strict 4K Token Ceiling</h3>
+        <p>Every micro-agent specification strictly fits inside a 4,000 token context envelope (&lt; 500 tokens on average) preventing context bloat.</p>
+      </div>
+      <div class="card">
+        <h3>🔌 Zero-Hop MCP Server</h3>
+        <p>Built-in JSON-RPC 2.0 stdio Model Context Protocol server exposing Tier 0 tools and micro-agents directly to Claude Code, Antigravity, and Cursor.</p>
+      </div>
+      <div class="card">
+        <h3>🎯 Verification Harness</h3>
+        <p>Automated output contract enforcement with schema verification and automatic fallback escalation to larger model tiers.</p>
+      </div>
+    </div>
+
+    <section id="quickstart">
+      <h2 style="font-size:1.8rem; margin-bottom:1rem; color:#fff;">Installation &amp; Usage</h2>
+      <pre><code># Install from Cargo
+cargo install --path .
+
+# Run deterministic Tier 0 tool directly
+ptk run flow_matching_sigmas '{"steps": 20, "shift": 3.0}'
+
+# Convert CSS spring timing to damping ratio & natural frequency
+ptk run spring_physics_convert '{"mass": 1.0, "stiffness": 100.0, "damping": 10.0}'
+
+# Start standard MCP stdio server
+ptk mcp</code></pre>
+    </section>
+  </main>
+
+  <footer>
+    <p>Crafted by <a href="https://brandonhubbard.com">Brandon Hubbard</a> • <a href="https://code.brandonhubbard.com">code.brandonhubbard.com</a> • MIT License</p>
+  </footer>
+</body>
+</html>
