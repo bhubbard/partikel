@@ -12,6 +12,7 @@ use crate::tier0::{
 use serde_json::{json, Value};
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
 
+#[derive(Debug)]
 pub struct McpServer {
     registry: Option<CatalogRegistry>,
 }

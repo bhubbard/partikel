@@ -7,7 +7,7 @@ use clap::{Args, Parser, Subcommand};
 use colored::*;
 use std::io::Read;
 
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(
     name = "partikel",
     bin_name = "partikel",
@@ -20,7 +20,7 @@ pub struct Cli {
     pub command: Commands,
 }
 
-#[derive(Subcommand)]
+#[derive(Subcommand, Debug)]
 pub enum Commands {
     /// Execute Tier 0 deterministic tools directly (sub-microsecond, 0 tokens)
     #[command(subcommand)]
@@ -51,7 +51,7 @@ pub enum Commands {
     },
 }
 
-#[derive(Subcommand)]
+#[derive(Subcommand, Debug)]
 pub enum CatalogSubcommands {
     /// List all micro-agents in catalog
     List {
@@ -68,7 +68,7 @@ pub enum CatalogSubcommands {
     Stats,
 }
 
-#[derive(Subcommand)]
+#[derive(Subcommand, Debug)]
 pub enum Tier0Commands {
     /// Calculate flow-matching discrete sigma schedule
     Sigmas(SigmasArgs),
@@ -91,7 +91,7 @@ pub enum Tier0Commands {
     Cron { expression: String },
 }
 
-#[derive(Args)]
+#[derive(Args, Debug)]
 pub struct SigmasArgs {
     #[arg(short, long, default_value_t = 8)]
     pub steps: usize,
@@ -101,7 +101,7 @@ pub struct SigmasArgs {
     pub timesteps: usize,
 }
 
-#[derive(Args)]
+#[derive(Args, Debug)]
 pub struct SpringArgs {
     #[arg(short, long, default_value_t = 0.35)]
     pub response: f64,
@@ -111,7 +111,7 @@ pub struct SpringArgs {
     pub blend: f64,
 }
 
-#[derive(Args)]
+#[derive(Args, Debug)]
 pub struct LoraArgs {
     #[arg(short, long)]
     pub rank: u32,
@@ -121,7 +121,7 @@ pub struct LoraArgs {
     pub multiplier: Option<f64>,
 }
 
-#[derive(Args)]
+#[derive(Args, Debug)]
 pub struct WcagArgs {
     #[arg(long)]
     pub fg: String,

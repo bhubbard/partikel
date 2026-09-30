@@ -1,6 +1,6 @@
 [package]
 name = "partikel"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["Brandon Hubbard"]
 description = "Irreducible, sub-millisecond micro-agents & deterministic Tier 0 edge engine for Apple Silicon"
