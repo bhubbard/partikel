@@ -7,8 +7,10 @@ pub mod catalog;
 pub mod cli;
 pub mod error;
 pub mod mcp;
+pub mod seexpr;
 pub mod tier0;
 
 pub use catalog::{CatalogRegistry, CatalogSummary, MicroAgentSpec};
 pub use error::{PartikelError, Result};
 pub use mcp::McpServer;
+pub use seexpr::{SeExprOp, SeExprProgram};
