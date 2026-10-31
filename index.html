@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PARTIKEL (PTK) // Tier 0 Deterministic Engine & 4K Micro-Agent MCP Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root[data-theme="dark"] {
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --surface-alt: #161616;
+      --text: #f5f5f5;
+      --muted: #888888;
+      --border: #222222;
+      --accent: #10b981;
+      --accent-2: #38bdf8;
+      --accent-3: #f59e0b;
+    }
+    :root[data-theme="light"] {
+      --bg: #fafafa;
+      --surface: #ffffff;
+      --surface-alt: #f2f2f2;
+      --text: #0a0a0a;
+      --muted: #555555;
+      --border: #dcdcdc;
+      --accent: #059669;
+      --accent-2: #0284c7;
+      --accent-3: #d97706;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; border-radius: 0 !important; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      line-height: 1.5;
+      letter-spacing: -0.01em;
+    }
+    code, pre, .mono { font-family: 'JetBrains Mono', monospace; }
+    .top-header {
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+    }
+    .top-header a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .top-header a:hover { color: var(--accent); }
+    .subnav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 0.6rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .subnav-links { display: flex; gap: 1.25rem; align-items: center; flex-wrap: wrap; }
+    .subnav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .subnav-links a:hover { color: var(--accent); }
+    .btn {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.45rem 0.9rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .btn:hover, .btn.active {
+      background: var(--accent);
+      color: #0a0a0a;
+      border-color: var(--accent);
+    }
+    .container { max-width: 1440px; margin: 0 auto; border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
+    .hero {
+      padding: 3rem 2rem;
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2rem;
+    }
+    @media (max-width: 900px) { .hero { grid-template-columns: 1fr; } }
+    .badge {
+      display: inline-block;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 0.2rem 0.6rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+    }
+    h1 { font-size: clamp(2rem, 4vw, 3.25rem); font-weight: 800; line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 1rem; }
+    .hero p { color: var(--muted); font-size: 1rem; max-width: 68ch; }
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .stat-cell {
+      padding: 1.1rem;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .stat-label { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .stat-val { font-size: 1.55rem; font-weight: 800; color: var(--accent); margin-top: 0.25rem; }
+    .workspace {
+      display: grid;
+      grid-template-columns: 400px 1fr;
+      border-bottom: 1px solid var(--border);
+    }
+    @media (max-width: 1024px) { .workspace { grid-template-columns: 1fr; } }
+    .sidebar {
+      border-right: 1px solid var(--border);
+      background: var(--surface);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .section-title {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.4rem;
+      margin-bottom: 0.5rem;
+    }
+    .control-group { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 0.7rem; }
+    .control-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    input[type="range"], input[type="text"] {
+      width: 100%;
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.4rem;
+      accent-color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+    }
+    .stage-panel {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      background: var(--bg);
+    }
+    .canvas-header {
+      padding: 0.85rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--surface-alt);
+      font-size: 0.75rem;
+    }
+    .canvas-wrap {
+      padding: 1.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: var(--bg);
+    }
+    canvas {
+      width: 100%;
+      max-width: 960px;
+      height: 440px;
+      border: 1px solid var(--border);
+      background: #070707;
+      display: block;
+    }
+    .metrics-bar {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+    }
+    @media (max-width: 768px) { .metrics-bar { grid-template-columns: repeat(2, 1fr); } }
+    .metric-item {
+      padding: 0.9rem 1.1rem;
+      border-right: 1px solid var(--border);
+    }
+    .metric-item:last-child { border-right: none; }
+    .bench-section {
+      padding: 2.5rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.82rem;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 0.75rem 1rem;
+      text-align: left;
+    }
+    th {
+      background: var(--surface);
+      text-transform: uppercase;
+      font-size: 0.7rem;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+    footer {
+      padding: 1.5rem 2rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      background: var(--surface);
+    }
+  </style>
+</head>
+<body>
+  <header class="top-header">
+    <a href="https://brandonhubbard.com">BRANDONHUBBARD.COM // ENGINEERING PORTAL</a>
+    <div class="mono">RUST 2021 // TIER 0 DETERMINISTIC ENGINE // 35 MICRO-AGENTS (&lt;=4K) // MCP JSON-RPC 2.0</div>
+  </header>
+
+  <nav class="subnav">
+    <div class="subnav-links">
+      <a href="https://code.brandonhubbard.com/">← CODE PORTAL</a>
+      <a href="#studio">TIER 0 PHYSICS &amp; SIGMA STUDIO</a>
+      <a href="#catalog">4K ENVELOPE METRICS</a>
+      <a href="#benchmarks">88.8X BENCHMARKS</a>
+      <a href="https://github.com/bhubbard/partikel" target="_blank" rel="noopener">GITHUB REPO ↗</a>
+    </div>
+    <button class="btn" id="themeToggle">THEME: DARK</button>
+  </nav>
+
+  <div class="container">
+    <section class="hero">
+      <div>
+        <span class="badge">SUB-ATOMIC MICRO-AGENT &amp; TIER 0 ENGINE // PARTIKEL (PTK)</span>
+        <h1>PARTIKEL // TIER 0 DETERMINISTIC RUNTIME &amp; 4K MCP STUDIO</h1>
+        <p>
+          Sub-microsecond native Rust execution engine for deterministic math, physics, and AST transformations
+          (flow-matching $\sigma_t$ schedules, harmonic spring oscillators, WCAG 2.2 luminance, Tailwind box-model cascade sorting)
+          paired with 35 strictly bounded ($\le 4\text{K}$ token) micro-agent specifications exposed over stdio JSON-RPC 2.0 MCP.
+        </p>
+      </div>
+      <div class="stat-grid mono">
+        <div class="stat-cell">
+          <div class="stat-label">TIER 0 SPEEDUP</div>
+          <div class="stat-val">88.8x</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-label">SPRING STIFFNESS (k)</div>
+          <div class="stat-val" id="heroStiff">322.27</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-label">4K CATALOG SPECS</div>
+          <div class="stat-val">35 / 35</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-label">LLM TOKEN COST</div>
+          <div class="stat-val">0 TOK</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="workspace" id="studio">
+      <aside class="sidebar">
+        <div>
+          <div class="section-title">1. TIER 0 FLOW-MATCHING SIGMAS (WAN2.1 / FLUX)</div>
+          <div class="control-group">
+            <div class="control-label"><span>INFERENCE STEPS (N)</span><span class="mono" id="stepsVal">8</span></div>
+            <input type="range" id="stepsInput" min="4" max="24" step="1" value="8" />
+          </div>
+          <div class="control-group">
+            <div class="control-label"><span>TIME SHIFT FACTOR (S)</span><span class="mono" id="shiftVal">3.0</span></div>
+            <input type="range" id="shiftInput" min="1.0" max="7.0" step="0.25" value="3.0" />
+          </div>
+        </div>
+
+        <div>
+          <div class="section-title">2. TIER 0 HARMONIC SPRING OSCILLATOR</div>
+          <div class="control-group">
+            <div class="control-label"><span>RESPONSE TIME (Tr seconds)</span><span class="mono" id="respVal">0.35s</span></div>
+            <input type="range" id="respInput" min="0.15" max="1.0" step="0.05" value="0.35" />
+          </div>
+          <div class="control-group">
+            <div class="control-label"><span>DAMPING RATIO (zeta)</span><span class="mono" id="dampVal">0.70</span></div>
+            <input type="range" id="dampInput" min="0.20" max="1.40" step="0.05" value="0.70" />
+          </div>
+        </div>
+
+        <div>
+          <div class="section-title">3. TIER 0 FILEVINE &amp; LORA FAST-PATH</div>
+          <div class="control-group">
+            <div class="control-label"><span>RAW FIELD LABEL</span><span class="mono" id="fvOut">incidentReportPoliceLog</span></div>
+            <input type="text" id="fvInput" value="Incident Report / Police Log #" />
+          </div>
+        </div>
+
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <button class="btn active" id="presetUnder">UNDERDAMPED (0.65)</button>
+          <button class="btn" id="presetCrit">CRITICAL (1.00)</button>
+          <button class="btn" id="presetOver">OVERDAMPED (1.25)</button>
+        </div>
+      </aside>
+
+      <main class="stage-panel">
+        <div class="canvas-header mono">
+          <span>STAGE // SHIFTED FLOW-MATCHING SIGMA SCHEDULE &amp; HARMONIC OSCILLATOR TRAJECTORY x(t)</span>
+          <span id="statusText" style="color:var(--accent)">MCP STDIO READY // 0.18 µs EXECUTION</span>
+        </div>
+        <div class="canvas-wrap">
+          <canvas id="studioCanvas" width="960" height="440"></canvas>
+        </div>
+        <div class="metrics-bar mono" id="catalog">
+          <div class="metric-item">
+            <div class="stat-label">OMEGA_N / DAMPING (c)</div>
+            <div id="mSpringC" style="font-weight:700; margin-top:0.2rem;">17.95 rad/s / 25.13</div>
+          </div>
+          <div class="metric-item">
+            <div class="stat-label">SIGMA_0 -> SIGMA_MID</div>
+            <div id="mSigmaMid" style="font-weight:700; margin-top:0.2rem; color:var(--accent-2);">1.0000 -> 0.7501</div>
+          </div>
+          <div class="metric-item">
+            <div class="stat-label">DAMPING REGIME</div>
+            <div id="mRegime" style="font-weight:700; margin-top:0.2rem; color:var(--accent);">UNDERDAMPED (ZETA &lt; 1)</div>
+          </div>
+          <div class="metric-item">
+            <div class="stat-label">AVG SPEC ENVELOPE</div>
+            <div style="font-weight:700; margin-top:0.2rem;">445 / 4,000 TOK</div>
+          </div>
+          <div class="metric-item">
+            <div class="stat-label">CSS TRANSITION</div>
+            <div id="mCss" style="font-weight:700; margin-top:0.2rem; color:var(--accent-3);">350ms cubic-bezier</div>
+          </div>
+        </div>
+      </main>
+    </section>
+
+    <section class="bench-section" id="benchmarks">
+      <div class="section-title">EMPIRICAL PERFORMANCE BENCHMARKS // PARTIKEL (PTK) VS SCRIPTING MCP BASELINE</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Subsystem / Operation</th>
+            <th>Node.js / Python MCP Baseline</th>
+            <th>partikel Tier 0 (Rust)</th>
+            <th>Speedup</th>
+            <th>Token Cost</th>
+          </tr>
+        </thead>
+        <tbody class="mono">
+          <tr>
+            <td>Flow-Matching Sigma Schedule (10k calls)</td>
+            <td>19.40 ms</td>
+            <td style="color:var(--accent); font-weight:700;">0.18 ms</td>
+            <td style="color:var(--accent-2); font-weight:700;">107.8x</td>
+            <td>0 tokens</td>
+          </tr>
+          <tr>
+            <td>Harmonic Spring Constants + 64-pt Trajectory (10k calls)</td>
+            <td>42.80 ms</td>
+            <td style="color:var(--accent); font-weight:700;">0.49 ms</td>
+            <td style="color:var(--accent-2); font-weight:700;">87.3x</td>
+            <td>0 tokens</td>
+          </tr>
+          <tr>
+            <td>WCAG 2.2 Luminance &amp; Contrast Check (10k calls)</td>
+            <td>28.50 ms</td>
+            <td style="color:var(--accent); font-weight:700;">0.31 ms</td>
+            <td style="color:var(--accent-2); font-weight:700;">91.9x</td>
+            <td>0 tokens</td>
+          </tr>
+          <tr>
+            <td>Tailwind Box-Model Cascade Sorter (10k calls)</td>
+            <td>76.20 ms</td>
+            <td style="color:var(--accent); font-weight:700;">0.94 ms</td>
+            <td style="color:var(--accent-2); font-weight:700;">81.1x</td>
+            <td>0 tokens</td>
+          </tr>
+          <tr>
+            <td><strong>Full 35-Spec 4K Catalog Audit + Tier 0 Suite</strong></td>
+            <td>342.00 ms</td>
+            <td style="color:var(--accent); font-weight:700;">3.85 ms</td>
+            <td style="color:var(--accent-2); font-weight:700;">88.8x</td>
+            <td><strong>0 tokens</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <footer>
+      <span>PARTIKEL (PTK) // SWISS MODERNIST INTERACTIVE ENGINEERING STUDIO</span>
+      <span class="mono">HTTP/2 200 // ZERO CLIPPY WARNINGS // RUST 2021</span>
+    </footer>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('studioCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const stepsInput = document.getElementById('stepsInput');
+    const shiftInput = document.getElementById('shiftInput');
+    const respInput = document.getElementById('respInput');
+    const dampInput = document.getElementById('dampInput');
+    const fvInput = document.getElementById('fvInput');
+
+    function sanitizeFilevine(str) {
+      const words = str.replace(/[^a-zA-Z0-9\s]/g, ' ').trim().split(/\s+/).filter(Boolean);
+      if (words.length === 0) return 'field';
+      return words.map((w, i) => i === 0 ? w.toLowerCase() : w[0].toUpperCase() + w.slice(1).toLowerCase()).join('');
+    }
+
+    function computeState() {
+      const steps = parseInt(stepsInput.value, 10);
+      const shift = parseFloat(shiftInput.value);
+      const response = parseFloat(respInput.value);
+      const zeta = parseFloat(dampInput.value);
+
+      // Exact Rust flow_matching_sigmas
+      const sigmas = [];
+      for (let i = 0; i < steps; i++) {
+        const t = 1.0 - (i / steps) * (1.0 - 1.0 / 1000.0);
+        const s = (shift * t) / (1.0 + (shift - 1.0) * t);
+        sigmas.push(Math.round(s * 10000) / 10000);
+      }
+      sigmas.push(0.0);
+
+      // Exact Rust spring_physics_convert + sample_trajectory
+      const omegaN = (2.0 * Math.PI) / response;
+      const stiffness = Math.round(omegaN * omegaN * 100) / 100;
+      const damping = Math.round(2.0 * omegaN * zeta * 100) / 100;
+
+      const traj = [];
+      const numSamples = 64;
+      const durationS = 1.2;
+      for (let i = 0; i < numSamples; i++) {
+        const t = (i / (numSamples - 1)) * durationS;
+        let x = 0;
+        if (Math.abs(zeta - 1.0) < 1e-4) {
+          x = 1.0 - (1.0 + omegaN * t) * Math.exp(-omegaN * t);
+        } else if (zeta < 1.0) {
+          const omegaD = omegaN * Math.sqrt(1.0 - zeta * zeta);
+          const env = Math.exp(-zeta * omegaN * t);
+          const coeff = zeta / Math.sqrt(1.0 - zeta * zeta);
+          x = 1.0 - env * (Math.cos(omegaD * t) + coeff * Math.sin(omegaD * t));
+        } else {
+          const s = Math.sqrt(zeta * zeta - 1.0);
+          const r1 = -omegaN * (zeta - s);
+          const r2 = -omegaN * (zeta + s);
+          const c1 = r2 / (r2 - r1);
+          const c2 = -r1 / (r2 - r1);
+          x = 1.0 - (c1 * Math.exp(r1 * t) + c2 * Math.exp(r2 * t));
+        }
+        traj.push(x);
+      }
+
+      document.getElementById('stepsVal').textContent = steps;
+      document.getElementById('shiftVal').textContent = shift.toFixed(2);
+      document.getElementById('respVal').textContent = `${response.toFixed(2)}s`;
+      document.getElementById('dampVal').textContent = zeta.toFixed(2);
+      document.getElementById('fvOut').textContent = sanitizeFilevine(fvInput.value);
+
+      document.getElementById('heroStiff').textContent = stiffness.toFixed(2);
+      document.getElementById('mSpringC').textContent = `${omegaN.toFixed(1)} rad/s / ${damping.toFixed(1)}`;
+      const midIdx = Math.floor(steps / 2);
+      document.getElementById('mSigmaMid').textContent = `${sigmas[0].toFixed(4)} -> ${sigmas[midIdx].toFixed(4)}`;
+
+      const regime = Math.abs(zeta - 1.0) < 0.03 ? 'CRITICALLY DAMPED (ZETA=1)' : (zeta < 1.0 ? 'UNDERDAMPED (OVERSHOOT)' : 'OVERDAMPED (NO OVERSHOOT)');
+      document.getElementById('mRegime').textContent = regime;
+      document.getElementById('mCss').textContent = `${Math.round(response * 1000)}ms cubic-bezier`;
+
+      return { steps, shift, response, zeta, sigmas, stiffness, damping, traj };
+    }
+
+    let animTick = 0;
+    function render() {
+      animTick += 0.025;
+      const state = computeState();
+      const W = canvas.width;
+      const H = canvas.height;
+
+      ctx.fillStyle = '#070707';
+      ctx.fillRect(0, 0, W, H);
+
+      ctx.strokeStyle = '#151515';
+      ctx.lineWidth = 1;
+      for (let x = 0; x < W; x += 32) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+      for (let y = 0; y < H; y += 32) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+
+      // Left Panel: Shifted Flow-Matching Sigma Schedule Curve
+      const lx = 32;
+      const ly = 44;
+      const lw = 410;
+      const lh = 340;
+
+      ctx.fillStyle = '#888888';
+      ctx.font = '700 11px "JetBrains Mono", monospace';
+      ctx.fillText(`1. FLOW-MATCHING SIGMA SCHEDULE (N=${state.steps}, SHIFT S=${state.shift.toFixed(2)})`, lx, 28);
+
+      ctx.strokeStyle = '#262626';
+      ctx.strokeRect(lx, ly, lw, lh);
+
+      // Unshifted baseline diagonal
+      ctx.strokeStyle = '#333333';
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(lx, ly);
+      ctx.lineTo(lx + lw, ly + lh);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Shifted sigma curve
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      state.sigmas.forEach((s, idx) => {
+        const px = lx + (idx / state.steps) * lw;
+        const py = ly + (1.0 - s) * lh;
+        if (idx === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      });
+      ctx.stroke();
+
+      state.sigmas.forEach((s, idx) => {
+        const px = lx + (idx / state.steps) * lw;
+        const py = ly + (1.0 - s) * lh;
+        ctx.fillStyle = '#38bdf8';
+        ctx.fillRect(px - 3.5, py - 3.5, 7, 7);
+      });
+
+      // Right Panel: Harmonic Spring Oscillator Trajectory x(t)
+      const rx = 490;
+      const ry = 44;
+      const rw = 436;
+      const rh = 340;
+
+      ctx.fillStyle = '#888888';
+      ctx.font = '700 11px "JetBrains Mono", monospace';
+      ctx.fillText(`2. HARMONIC SPRING OSCILLATOR x(t) (k=${state.stiffness}, c=${state.damping})`, rx, 28);
+
+      ctx.strokeStyle = '#262626';
+      ctx.strokeRect(rx, ry, rw, rh);
+
+      // Target equilibrium line x = 1.0
+      const eqY = ry + rh * 0.28;
+      const startY = ry + rh * 0.88;
+      const ampH = startY - eqY;
+
+      ctx.strokeStyle = '#444444';
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(rx, eqY);
+      ctx.lineTo(rx + rw, eqY);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = '#888888';
+      ctx.font = '600 9px "JetBrains Mono", monospace';
+      ctx.fillText('TARGET x = 1.0', rx + 8, eqY - 6);
+
+      ctx.strokeStyle = '#10b981';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      state.traj.forEach((val, idx) => {
+        const px = rx + (idx / (state.traj.length - 1)) * rw;
+        const py = startY - val * ampH;
+        if (idx === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      });
+      ctx.stroke();
+
+      // Animated mass block along trajectory
+      const sampleIdx = Math.floor((animTick % 1.0) * (state.traj.length - 1));
+      const curVal = state.traj[sampleIdx];
+      const dotX = rx + (sampleIdx / (state.traj.length - 1)) * rw;
+      const dotY = startY - curVal * ampH;
+
+      ctx.fillStyle = '#f59e0b';
+      ctx.fillRect(dotX - 5, dotY - 5, 10, 10);
+
+      requestAnimationFrame(render);
+    }
+
+    document.getElementById('presetUnder').addEventListener('click', (e) => {
+      document.querySelectorAll('.sidebar .btn').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      respInput.value = 0.35;
+      dampInput.value = 0.65;
+    });
+    document.getElementById('presetCrit').addEventListener('click', (e) => {
+      document.querySelectorAll('.sidebar .btn').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      respInput.value = 0.40;
+      dampInput.value = 1.00;
+    });
+    document.getElementById('presetOver').addEventListener('click', (e) => {
+      document.querySelectorAll('.sidebar .btn').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      respInput.value = 0.45;
+      dampInput.value = 1.25;
+    });
+
+    document.getElementById('themeToggle').addEventListener('click', (e) => {
+      const html = document.documentElement;
+      const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      e.target.textContent = `THEME: ${next.toUpperCase()}`;
+    });
+
+    render();
+  </script>
+</body>
+</html>
