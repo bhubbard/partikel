@@ -20,6 +20,48 @@ pub struct SpringPhysicsResult {
     pub css_transition: String,
 }
 
+impl SpringPhysicsResult {
+    /// Evaluates the analytical second-order harmonic oscillator displacement trajectory `x(t)`
+    /// from `0.0` toward `1.0` across `num_samples` evenly spaced points over `duration_s` seconds.
+    /// Supports underdamped (`zeta < 1`), critically damped (`zeta == 1`), and overdamped (`zeta > 1`) regimes.
+    pub fn sample_trajectory(&self, num_samples: usize, duration_s: f64) -> Vec<f64> {
+        if num_samples == 0 {
+            return Vec::new();
+        }
+        let omega_n = (self.stiffness / self.mass.max(1e-6)).sqrt();
+        let zeta = self.damping_ratio.max(0.0);
+        let mut points = Vec::with_capacity(num_samples);
+
+        for i in 0..num_samples {
+            let t = if num_samples > 1 {
+                (i as f64 / (num_samples - 1) as f64) * duration_s
+            } else {
+                0.0
+            };
+            let displacement = if (zeta - 1.0).abs() < 1e-5 {
+                // Critically damped: x(t) = 1 - (1 + omega_n * t) * exp(-omega_n * t)
+                1.0 - (1.0 + omega_n * t) * (-omega_n * t).exp()
+            } else if zeta < 1.0 {
+                // Underdamped: x(t) = 1 - exp(-zeta * omega_n * t) * (cos(omega_d * t) + (zeta / sqrt(1 - zeta^2)) * sin(omega_d * t))
+                let omega_d = omega_n * (1.0 - zeta * zeta).sqrt();
+                let env = (-zeta * omega_n * t).exp();
+                let coeff = zeta / (1.0 - zeta * zeta).sqrt();
+                1.0 - env * ((omega_d * t).cos() + coeff * (omega_d * t).sin())
+            } else {
+                // Overdamped
+                let s = (zeta * zeta - 1.0).sqrt();
+                let r1 = -omega_n * (zeta - s);
+                let r2 = -omega_n * (zeta + s);
+                let c1 = r2 / (r2 - r1);
+                let c2 = -r1 / (r2 - r1);
+                1.0 - (c1 * (r1 * t).exp() + c2 * (r2 * t).exp())
+            };
+            points.push((displacement * 10000.0).round() / 10000.0);
+        }
+        points
+    }
+}
+
 /// Convert designer parameters (response, damping_ratio) into physical spring constants
 pub fn spring_physics_convert(
     response: f64,
@@ -69,5 +111,9 @@ mod tests {
         assert_eq!(res.stiffness, 246.74);
         assert_eq!(res.damping, 26.7);
         assert!(res.css_transition.contains("400ms"));
+        let curve = res.sample_trajectory(9, 0.8);
+        assert_eq!(curve.len(), 9);
+        assert_eq!(curve[0], 0.0);
+        assert!((curve[8] - 1.0).abs() < 0.05);
     }
 }
